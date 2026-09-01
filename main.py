@@ -8,7 +8,7 @@ import sys
 from telebot import TeleBot, types
 
 # --- AYARLAR ---
-BOT_TOKEN = "8683988458:AAEsW3O_uGoT5VWfpuTLwq1yK9I-zSlHoBM"
+BOT_TOKEN = "8683988458:AAFon43UQGkuzgqdowjjIxKl7SwDxPJAYMQ"
 ADMIN_ID = 8629520501
 CHANNEL_ID = "@tgfreehosting" 
 BASE_DIR = os.path.expanduser("~/termux")
