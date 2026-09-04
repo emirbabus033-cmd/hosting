@@ -218,12 +218,12 @@ def check_join(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == "upload_doc")
 def upload_ask(call):
-    bot.edit_message_text("📝 Lütfen `.py`, `.html`, `.js` veya `.json` dosyanızı gönderin.", call.message.chat.id, call.message.message_id)
+    bot.edit_message_text("📝 Lütfen `.py`, `.html`, `.js` veya `.json`,  '.exe' dosyanızı gönderin.", call.message.chat.id, call.message.message_id)
 
 @bot.message_handler(content_types=['document'])
 def handle_doc(m):
-    if not m.document.file_name.lower().endswith(('.py', '.html', '.js', '.json')):
-        bot.reply_to(m, "❌ Sadece `.py`, `.html`, `.js` veya `.json` dosyaları yükleyebilirsiniz!")
+    if not m.document.file_name.lower().endswith(('.py', '.html', '.js', '.json', '.exe')):
+        bot.reply_to(m, "❌ Sadece `.py`, `.html`, `.js` veya `.json`, '.exe' dosyaları yükleyebilirsiniz!")
         return
     
     path = os.path.join(TEMP_DIR, f"{m.from_user.id}_{m.document.file_name}")
@@ -307,7 +307,14 @@ def manage(call):
 def action(call):
     act, b = call.data.split("_", 1)
     if act == "start" and not is_running(b):
-        run_cmd = "python" if b.endswith(".py") else "node" if b.endswith(".js") else "echo"
+        if b.endswith(".py"):
+            run_cmd = "python"
+        elif b.endswith(".js"):
+            run_cmd = "node"
+        elif b.endswith(".exe"):
+            run_cmd = "wine"
+        else:
+            run_cmd = "echo"
         cmd = f"nohup {run_cmd} {os.path.join(BASE_DIR, b)} > {get_log_file(b)} 2>&1 & echo $! > {get_pid_file(b)}"
         subprocess.Popen(cmd, shell=True)
         bot.answer_callback_query(call.id, "✅ Başlatıldı.")
